@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>April fool</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body {
+      display: grid;
+      place-items: center;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: clamp(1.5rem, 5vw, 2.5rem);
+    }
+    main {
+      text-align: center;
+    }
+    #ip {
+      margin-top: 1rem;
+      font-size: 0.55em;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div>april fool  ALSO YOU ARE BEING HACKEED HEHEH</div>
+    <p id="ip" aria-live="polite">Your IP: …</p>
+  </main>
+  <script>
+    (function () {
+      var el = document.getElementById('ip');
+      fetch('https://api.ipify.org?format=json')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          el.textContent = 'Your IP: ' + data.ip;
+        })
+        .catch(function () {
+          el.textContent = 'Your IP: (unavailable)';
+        });
+    })();
+  </script>
+</body>
+</html>
+
