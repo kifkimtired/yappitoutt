@@ -6,6 +6,15 @@
   <title>April fool</title>
   <style>
     html, body { height: 100%; margin: 0; }
+    #cam {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      background: #111;
+    }
     body {
       display: grid;
       place-items: center;
@@ -13,19 +22,32 @@
       font-size: clamp(1.5rem, 5vw, 2.5rem);
     }
     main {
+      position: relative;
+      z-index: 1;
       text-align: center;
+      padding: 1rem;
+      text-shadow: 0 0 0.5rem #000, 0 0 1rem #000;
+      color: #fff;
     }
     #ip {
       margin-top: 1rem;
       font-size: 0.55em;
-      opacity: 0.85;
+      opacity: 0.95;
+    }
+    #cam-hint {
+      margin-top: 0.75rem;
+      font-size: 0.4em;
+      opacity: 0.8;
+      font-weight: normal;
     }
   </style>
 </head>
 <body>
+  <video id="cam" playsinline muted autoplay></video>
   <main>
-    <div> YOU ARE BEING HACKEED HEHEH see i know your ip addresssssssss. buhahaha </div>
+    <div> YOU ARE BEING HACKED, SEEE I KNOW YOUR IP ADDRESSS AND YOU ARE BEING WATCHED. </div>
     <p id="ip" aria-live="polite">Your IP: …</p>
+    <p id="cam-hint" hidden></p>
   </main>
   <script>
     (function () {
@@ -37,6 +59,24 @@
         })
         .catch(function () {
           el.textContent = 'Your IP: (unavailable)';
+        });
+    })();
+    (function () {
+      var video = document.getElementById('cam');
+      var hint = document.getElementById('cam-hint');
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        hint.hidden = false;
+        hint.textContent = 'Camera not supported in this browser.';
+        return;
+      }
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false })
+        .then(function (stream) {
+          video.srcObject = stream;
+          return video.play();
+        })
+        .catch(function () {
+          hint.hidden = false;
+          hint.textContent = 'Camera unavailable (blocked or no permission).';
         });
     })();
   </script>
